@@ -1,0 +1,25 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: events-collector
+spec:
+  concurrencyPolicy: Forbid
+  schedule: "*/10 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: events-collector
+              image: fintlabs.azurecr.io/events-collector:build.1
+              envFrom:
+                - configMapRef:
+                    name: fint-environment
+                - secretRef:
+                    name: fint-events-collector
+              env:
+                - {name: fint.audit.baseurl, value: https://alpha.felleskomponent.no/events}
+                - {name: fint.audit.blob.container-name, value: fint-events-alpha}
+              args:
+                - fintlabs.no

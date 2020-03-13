@@ -1,0 +1,64 @@
+plugins {
+    id 'org.springframework.boot' version '2.2.5.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+    id 'java'
+    id "io.freefair.lombok" version "5.0.0-rc6"
+}
+
+group = 'no.fint'
+sourceCompatibility = '1.8'
+
+repositories {
+    mavenLocal()
+    jcenter()
+    maven {
+        url "http://dl.bintray.com/fint/maven"
+    }
+}
+
+dependencies {
+    implementation('org.springframework.boot:spring-boot-starter-webflux')
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+    implementation('no.fint:fint-audit-api:+')
+    implementation('com.azure:azure-storage-blob:+')
+    implementation('com.google.guava:guava:+')
+}
+
+test {
+    useJUnitPlatform()
+}
+
+
+task copyExternalDependencies(type: Copy) {
+    from configurations.runtimeClasspath
+    into "$buildDir/deps/external"
+    exclude '**/fint-*.jar'
+}
+
+task copyFintDependencies(type: Copy) {
+    from configurations.runtimeClasspath
+    into "$buildDir/deps/fint"
+    include '**/fint-*.jar'
+}
+
+build.dependsOn(copyExternalDependencies)
+build.dependsOn(copyFintDependencies)
+
+jar {
+    enabled(true)
+    manifest {
+        attributes(
+                "Manifest-Version": "1.0",
+                "Main-Class": "no.fint.Application",
+                "Specification-Version": "${archiveVersion}",
+                "Implementation-Version": "${archiveVersion}",
+                "Class-Path": configurations.runtimeClasspath.collect { it.getName() }.join(' ')
+        )
+    }
+}
+
+bootJar {
+    enabled(false)
+}
