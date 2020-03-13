@@ -4,7 +4,7 @@ metadata:
   name: events-collector
 spec:
   concurrencyPolicy: Forbid
-  schedule: "*/10 * * * *"
+  schedule: "50 23 * * *"
   jobTemplate:
     spec:
       template:

@@ -3,7 +3,7 @@ package no.fint;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
+import com.fasterxml.jackson.databind.util.StdDateFormat;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +22,7 @@ public class Config {
     @Bean
     public ObjectMapper objectMapper() {
         return new ObjectMapper()
-                .setDateFormat(new ISO8601DateFormat())
+                .setDateFormat(new StdDateFormat())
                 .setSerializationInclusion(JsonInclude.Include.NON_EMPTY)
                 .enable(SerializationFeature.INDENT_OUTPUT);
     }
