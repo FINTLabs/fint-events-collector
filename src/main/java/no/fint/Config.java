@@ -12,10 +12,14 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 public class Config {
     @Bean
-    public WebClient webClient(@Value("${fint.audit.baseurl}") String baseurl) {
+    public WebClient webClient(
+            @Value("${fint.audit.baseurl}") String baseurl,
+            @Value("${fint.audit.username}") String username,
+            @Value("${fint.audit.password}") String password) {
         return WebClient
                 .builder()
                 .baseUrl(baseurl)
+                .defaultHeaders(headers -> headers.setBasicAuth(username, password))
                 .build();
     }
 
