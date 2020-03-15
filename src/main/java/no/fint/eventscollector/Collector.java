@@ -28,11 +28,15 @@ public class Collector implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        for (int i = 0; i < orgids.length; i++) {
-            String orgId = orgids[i];
+        for (String orgId : orgids) {
             List<AuditEvent> events = eventsService.getAuditEvents(orgId, "24h");
             blobStorage.storeEvents(orgId, events);
             log.info("Stored {} events for {}", events.size(), orgId);
         }
+        eventsService.deleteAuditEvents("PT36H");
+        Long size = eventsService.getRepositorySize();
+        log.info("Repository size is {}", size);
+        boolean status = eventsService.restartProcessor();
+        log.info("Processor restarted, running: {}", status);
     }
 }

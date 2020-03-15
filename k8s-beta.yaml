@@ -12,7 +12,7 @@ spec:
           restartPolicy: Never
           containers:
             - name: events-collector
-              image: fintlabs.azurecr.io/events-collector:build.3
+              image: fintlabs.azurecr.io/events-collector:build.5
               envFrom:
                 - configMapRef:
                     name: fint-environment
@@ -20,7 +20,6 @@ spec:
                     name: fint-events-collector
               env:
                 - {name: fint.audit.baseurl, value: https://beta.felleskomponent.no/events}
-                - {name: fint.audit.username, value: pwfatut}
-                - {name: fint.audit.password, value: pwfatut}
                 - {name: fint.audit.blob.container-name, value: fint-events-beta}
-                - {name: fint.audit.orgids, value: fintlabs.no,viken.no}
+                - {name: fint.audit.orgids, value: 'fintlabs.no,viken.no'}
+                - {name: fint.audit.timeout, value: PT45S}
