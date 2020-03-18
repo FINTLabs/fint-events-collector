@@ -6,9 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 
 import java.time.Duration;
-import java.util.List;
 
 @Service
 public class EventsService {
@@ -25,14 +25,12 @@ public class EventsService {
         this.timeout = timeout;
     }
 
-    public List<AuditEvent> getAuditEvents(String orgId, String period) {
+    public Flux<AuditEvent> getAuditEvents(String orgId, Duration period) {
         return webClient
                 .get()
                 .uri("/api/{orgId}?period={period}&limit={limit}", orgId, period, 100_000_000L)
                 .retrieve()
-                .bodyToFlux(AuditEvent.class)
-                .collectList()
-                .block(timeout);
+                .bodyToFlux(AuditEvent.class);
     }
 
     public Boolean getProcessorStatus() {
@@ -44,23 +42,25 @@ public class EventsService {
                 .block(timeout);
     }
 
-    public boolean restartProcessor() {
+    public void stopProcessor() {
         webClient
                 .delete()
                 .uri(PROCESSOR)
                 .retrieve()
                 .toBodilessEntity()
                 .block(timeout);
+    }
+
+    public void startProcessor() {
         webClient
                 .post()
                 .uri(PROCESSOR)
                 .retrieve()
                 .toBodilessEntity()
                 .block(timeout);
-        return getProcessorStatus();
     }
 
-    public Boolean deleteAuditEvents(String period) {
+    public Boolean deleteAuditEvents(Duration period) {
         return webClient
                 .delete()
                 .uri(REPOSITORY + "?since={period}", period)

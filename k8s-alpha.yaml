@@ -12,7 +12,7 @@ spec:
           restartPolicy: Never
           containers:
             - name: events-collector
-              image: fintlabs.azurecr.io/events-collector:build.2
+              image: fintlabs.azurecr.io/events-collector:build.5
               envFrom:
                 - configMapRef:
                     name: fint-environment
@@ -22,3 +22,6 @@ spec:
                 - {name: fint.audit.baseurl, value: https://alpha.felleskomponent.no/events}
                 - {name: fint.audit.blob.container-name, value: fint-events-alpha}
                 - {name: fint.audit.orgids, value: fintlabs.no}
+                - {name: fint.audit.timeout, value: PT45S}
+                - {name: fint.audit.collect, value: PT24H}
+                - {name: fint.audit.retain, value: PT36H}
