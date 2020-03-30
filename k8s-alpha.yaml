@@ -12,7 +12,7 @@ spec:
           restartPolicy: Never
           containers:
             - name: events-collector
-              image: fintlabs.azurecr.io/events-collector:build.5
+              image: fintlabs.azurecr.io/events-collector:build.6
               envFrom:
                 - configMapRef:
                     name: fint-environment

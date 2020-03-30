@@ -20,9 +20,9 @@ spec:
                     name: fint-events-collector
               env:
                 - {name: JAVA_TOOL_OPTIONS, value: -XX:+ExitOnOutOfMemoryError -Xmx3G -verbose:gc}
-                - {name: fint.audit.baseurl, value: https://beta.felleskomponent.no/events}
-                - {name: fint.audit.blob.container-name, value: fint-events-beta}
-                - {name: fint.audit.orgids, value: 'fintlabs.no,viken.no'}
+                - {name: fint.audit.baseurl, value: https://api.felleskomponent.no/events}
+                - {name: fint.audit.blob.container-name, value: fint-events-api}
+                - {name: fint.audit.orgids, value: 'viken.no'}
                 - {name: fint.audit.timeout, value: PT5M}
                 - {name: fint.audit.collect, value: PT8H30M}
                 - {name: fint.audit.retain, value: PT12H}
