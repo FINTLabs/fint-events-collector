@@ -52,7 +52,7 @@ public class BlobStorage {
     public long storeEvents(String orgId, Flux<AuditEvent> events) throws IOException {
         long count;
         LocalDateTime dateTime = LocalDateTime.now();
-        String systemId = String.format("events-%s-%TF-%<TT.json.gz", orgId, dateTime);
+        String systemId = String.format("%s/%TF/events-%<TT.json.gz", orgId, dateTime);
         BlobClient blobClient = blobContainerClient.getBlobClient(systemId);
         try (JsonGenerator generator = objectMapper
                 .getFactory()
