@@ -30,7 +30,8 @@ public class EventsService {
                 .get()
                 .uri("/api/{orgId}?period={period}&limit={limit}", orgId, period, 100_000_000L)
                 .retrieve()
-                .bodyToFlux(AuditEvent.class);
+                .bodyToFlux(AuditEvent.class)
+                .timeout(timeout);
     }
 
     public Boolean getProcessorStatus() {
