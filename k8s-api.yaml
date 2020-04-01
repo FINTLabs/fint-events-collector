@@ -4,7 +4,7 @@ metadata:
   name: events-collector
 spec:
   concurrencyPolicy: Forbid
-  schedule: "0 */8 * * *"
+  schedule: "0 */6 * * *"
   jobTemplate:
     spec:
       template:
@@ -12,7 +12,7 @@ spec:
           restartPolicy: Never
           containers:
             - name: events-collector
-              image: fintlabs.azurecr.io/events-collector:build.6
+              image: fintlabs.azurecr.io/events-collector:build.7
               envFrom:
                 - configMapRef:
                     name: fint-environment
@@ -24,5 +24,5 @@ spec:
                 - {name: fint.audit.blob.container-name, value: fint-events-api}
                 - {name: fint.audit.orgids, value: 'viken.no'}
                 - {name: fint.audit.timeout, value: PT5M}
-                - {name: fint.audit.collect, value: PT8H30M}
-                - {name: fint.audit.retain, value: PT12H}
+                - {name: fint.audit.collect, value: PT6H30M}
+                - {name: fint.audit.retain, value: PT7H}
