@@ -37,6 +37,7 @@ public class Collector implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+        eventsService.deleteAuditEvents(collectDuration);
         for (String orgId : orgids) {
             log.info("Start collect {} ...", orgId);
             Flux<AuditEvent> events = eventsService.getAuditEvents(orgId, collectDuration);
