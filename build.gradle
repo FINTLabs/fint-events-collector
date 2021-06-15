@@ -9,11 +9,11 @@ group = 'no.fint'
 sourceCompatibility = '11'
 
 repositories {
-    mavenLocal()
-    jcenter()
     maven {
         url 'https://repo.fintlabs.no/releases'
     }
+    mavenCentral()
+    mavenLocal()
 }
 
 dependencies {
@@ -24,6 +24,7 @@ dependencies {
     implementation('no.fint:fint-audit-api:+')
     implementation('com.azure:azure-storage-blob:+')
     implementation('com.google.guava:guava:+')
+    implementation('org.projectreactor:reactor-core:+')
 }
 
 test {
