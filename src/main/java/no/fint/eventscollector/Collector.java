@@ -37,6 +37,7 @@ public class Collector implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+        log.info("Deleting events older than {} ...", collectDuration);
         eventsService.deleteAuditEvents(collectDuration);
         for (String orgId : orgids) {
             log.info("Start collect {} ...", orgId);
