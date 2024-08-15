@@ -1,12 +1,12 @@
 package no.fint.eventscollector;
 
-import no.fint.audit.model.AuditEvent;
+import no.fintlabs.audit.model.AuditEvent;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
+import reactor.util.retry.Retry;
 
 import java.time.Duration;
 
@@ -20,7 +20,7 @@ public class EventsService {
     public EventsService(
             WebClient webClient,
             @Value("${fint.audit.timeout}") Duration timeout
-            ) {
+    ) {
         this.webClient = webClient;
         this.timeout = timeout;
     }
@@ -31,7 +31,10 @@ public class EventsService {
                 .uri("/api/{orgId}?period={period}&limit={limit}", orgId, period, 100_000_000L)
                 .retrieve()
                 .bodyToFlux(AuditEvent.class)
-                .timeout(timeout);
+                .timeout(timeout)
+                .retryWhen(Retry.backoff(5, Duration.ofSeconds(10))
+                        .maxBackoff(Duration.ofMinutes(5))
+                        .onRetryExhaustedThrow((retryBackoffSpec, retrySignal) -> retrySignal.failure()));
     }
 
     public Boolean getProcessorStatus() {
@@ -67,8 +70,10 @@ public class EventsService {
                 .uri(REPOSITORY + "?since={period}", period)
                 .retrieve()
                 .toBodilessEntity()
-                .map(ResponseEntity::getStatusCode)
-                .map(HttpStatus::is2xxSuccessful)
+                .map(response -> HttpStatus.valueOf(response.getStatusCode().value()).is2xxSuccessful())
+                .retryWhen(Retry.backoff(5, Duration.ofSeconds(10))
+                        .maxBackoff(Duration.ofMinutes(5))
+                        .onRetryExhaustedThrow((retryBackoffSpec, retrySignal) -> retrySignal.failure()))
                 .block(timeout);
     }
 

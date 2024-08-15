@@ -1,12 +1,14 @@
 plugins {
-    id 'org.springframework.boot' version '2.4.7'
-    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'org.springframework.boot' version '3.3.2'
+    id 'io.spring.dependency-management' version '1.1.6'
     id 'java'
-    id "io.freefair.lombok" version "5.3.3.3"
+    id 'com.github.ben-manes.versions' version '0.51.0'
+    id 'se.patrikerdes.use-latest-versions' version '0.2.18'
 }
 
-group = 'no.fint'
-sourceCompatibility = '11'
+group = 'no.fintlabs'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '21'
 
 repositories {
     maven {
@@ -16,49 +18,26 @@ repositories {
     mavenLocal()
 }
 
-dependencies {
-    implementation('org.springframework.boot:spring-boot-starter-webflux')
-    testImplementation('org.springframework.boot:spring-boot-starter-test') {
-        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
     }
-    implementation('no.fint:fint-audit-api:+')
-    implementation('com.azure:azure-storage-blob:12.12.0')
-    implementation('com.google.guava:guava:30.1.1-jre')
-    //implementation('io.projectreactor:reactor-core:3.4.6')
-    //implementation('io.projectreactor.netty:reactor-netty:1.0.7')
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'no.fintlabs:fint-audit-api:2.0.0-rc-2'
+    implementation 'com.azure:azure-storage-blob:12.28.0-beta.1'
+    implementation 'com.google.guava:guava:33.2.1-jre'
+
+    compileOnly 'org.projectlombok:lombok:1.18.34'
+    annotationProcessor 'org.projectlombok:lombok:1.18.34'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 test {
     useJUnitPlatform()
-}
-
-
-task copyExternalDependencies(type: Copy) {
-    from configurations.runtimeClasspath
-    into "$buildDir/deps/external"
-    exclude '**/fint-*.jar'
-}
-
-task copyFintDependencies(type: Copy) {
-    from configurations.runtimeClasspath
-    into "$buildDir/deps/fint"
-    include '**/fint-*.jar'
-}
-
-build.dependsOn(copyExternalDependencies)
-build.dependsOn(copyFintDependencies)
-
-jar {
-    enabled(true)
-    manifest {
-        attributes(
-                "Manifest-Version": "1.0",
-                "Main-Class": "no.fint.Application",
-                "Specification-Version": "${archiveVersion}",
-                "Implementation-Version": "${archiveVersion}",
-                "Class-Path": configurations.runtimeClasspath.collect { it.getName() }.join(' ')
-        )
-    }
 }
 
 bootJar {
