@@ -1,6 +1,6 @@
 package no.fint.eventscollector;
 
-import no.fintlabs.audit.model.AuditEvent;
+import no.fint.audit.model.AuditEvent;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
