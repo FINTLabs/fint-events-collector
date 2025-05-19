@@ -29,13 +29,6 @@ jobs:
         run: |
           ./gradlew build
           mkdir data
-          cp ./build/libs/${GITHUB_REPOSITORY#*/}-*.jar ./data/app.jar
-
-      - name: Upload Build Artifact
-        uses: actions/upload-artifact@v3.1.3
-        with:
-          name: ${{steps.get_repo.outputs.REPO}}
-          path: ./data/app.jar
 
       - name: Trigger CD
         if: github.ref == 'refs/heads/main'
