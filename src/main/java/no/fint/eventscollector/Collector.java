@@ -39,12 +39,18 @@ public class Collector implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         log.info("Deleting events older than {} ...", collectDuration);
         eventsService.deleteAuditEvents(collectDuration);
+
         for (String orgId : orgids) {
             log.info("Start collect {} ...", orgId);
-            Flux<AuditEvent> events = eventsService.getAuditEvents(orgId, collectDuration);
+
+            Flux<AuditEvent> events = eventsService
+                    .getAuditEvents(orgId, collectDuration)
+                    .map(this::maskQuery);
+
             long size = blobStorage.storeEvents(orgId, events);
             log.info("Stored {} events for {}", size, orgId);
         }
+
         eventsService.deleteAuditEvents(retainDuration);
         Long size = eventsService.getRepositorySize();
         log.info("Repository size is {}", size);
@@ -55,4 +61,14 @@ public class Collector implements ApplicationRunner {
             log.info("Processor restarted.");
         }
     }
+
+    private AuditEvent maskQuery(AuditEvent auditEvent) {
+        var event = auditEvent.getEvent();
+        if (event != null && event.getRequest() != null) {
+            var req = event.getRequest();
+            req.setQuery(req.getFilteredQuery());
+        }
+        return auditEvent;
+    }
+
 }
