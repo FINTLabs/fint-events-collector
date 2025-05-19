@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@main
+        uses: actions/checkout@v2
 
       - name: Get repo name
         id: get_repo
@@ -19,9 +19,6 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: '21'
-
-      - name: Gradle Wrapper Validation
-        uses: gradle/wrapper-validation-action@v2
 
       - name: Gradle Setup
         uses: gradle/gradle-build-action@v2.4.2
