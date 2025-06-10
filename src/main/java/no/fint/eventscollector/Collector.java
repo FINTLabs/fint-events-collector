@@ -64,9 +64,12 @@ public class Collector implements ApplicationRunner {
 
     private AuditEvent maskQuery(AuditEvent auditEvent) {
         var event = auditEvent.getEvent();
-        if (event != null && event.getRequest() != null) {
-            var req = event.getRequest();
-            req.setQuery(req.getFilteredQuery());
+        if (event != null) {
+            event.setMessage(event.getFilteredMessage());
+            if (event.getRequest() != null) {
+                var req = event.getRequest();
+                req.setQuery(req.getFilteredQuery());
+            }
         }
         return auditEvent;
     }
