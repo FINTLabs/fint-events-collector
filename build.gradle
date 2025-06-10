@@ -26,7 +26,7 @@ configurations {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
-    implementation 'no.fintlabs:fint-audit-api:2.1.0-rc-1'
+    implementation 'no.fintlabs:fint-audit-api:2.2.1'
     implementation 'com.azure:azure-storage-blob:12.28.0-beta.1'
     implementation 'com.google.guava:guava:33.2.1-jre'
 
