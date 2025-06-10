@@ -67,8 +67,7 @@ public class Collector implements ApplicationRunner {
         if (event != null) {
             event.setMessage(event.getFilteredMessage());
             if (event.getRequest() != null) {
-                var req = event.getRequest();
-                req.setQuery(req.getFilteredQuery());
+                event.setQuery(event.getRequest().getFilteredQuery());
             }
         }
         return auditEvent;
